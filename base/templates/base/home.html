@@ -5,7 +5,7 @@
 <h1>This is the home page</h1>
 
 {% for room in rooms %}
-    <h2>{{ room.id }} - <a href='room/{{room.id}}}'>{{ room.name }}</a> </h2>
+    <h2>{{ room.id }} - <a href='{% url 'room' room.id  %}'>{{ room.name }}</a> </h2>
 {% endfor %}
 
 {% endblock content %}
