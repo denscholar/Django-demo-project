@@ -19,6 +19,10 @@ class Room(models.Model):
     updated = models.DateTimeField(auto_now = True)
     created = models.DateTimeField(auto_now_add = True)
 
+    # The class below order the rendering in descending order but without the '-', it becomes ascending order
+    class Meta:
+        ordering: ['-updated', '-created']
+
     def __str__(self):
         return self.name
 
