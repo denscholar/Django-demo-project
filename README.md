@@ -1,4 +1,4 @@
-# Developer Study Group Application
+## Developer Study Group Application
 
 This is a demo project in built using Django technoly.
 
