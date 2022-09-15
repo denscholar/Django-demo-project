@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from .models import Room, Topic
 from django.db.models import Q
 from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -12,6 +13,7 @@ from .forms import RoomForm
 
 # Login functionality
 def login_page(request):
+    page = 'Login Page'
 
     if request.user.is_authenticated:
         return redirect('home')
@@ -23,10 +25,11 @@ def login_page(request):
         password = request.POST.get('password')
 
         # Check if the user exist and if not, a flash message will display on the screen according to django documentation
-        try:
-            user =  user.objects.get(username=username)
-        except:
-            messages.error(request, 'User does not exist')
+        
+        # try:
+        #     user =  user.objects.get(username=username)
+        # except:
+        #     messages.error(request, 'User does not exist')
 
         # Authenticate the user if the user exist but ensure you inport the authenticate and login built-in method
 
@@ -38,13 +41,40 @@ def login_page(request):
         else:
             messages.error(request, 'Username or Password does not exist')
 
-    context = {}
+    context = {'page': page}
     return render(request, 'base/login.html', context)
 
 # Log out functionality
 def logout_user(request):
     logout(request)
     return redirect('home')
+
+# Registeration for new user
+def register_user(request):
+    form = UserCreationForm()
+
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+
+            # Clean the data in case for any uppercase data
+            user.username = user.username.lower()
+            user.save()
+
+            # Log the user in by calling the django built-in login method
+
+            login(request, user)
+
+            # Redirect to the home page after login in
+
+            return redirect('home')
+
+        else:
+            messages.error(request, 'An error occure during registration')
+
+    context = {'form': form}
+    return render(request, 'base/login.html', context)
 
 
 #function base views
